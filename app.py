@@ -36,8 +36,6 @@ TOOL_ICONS = {"web_search": "🔎", "calculator": "🧮"}
 MAX_PROMPT_CHARS = 2000
 MAX_RESULT_PREVIEW_CHARS = 800
 
-st.set_page_config(page_title="Simple ReAct Assistant", page_icon="🤖")
-
 
 @st.cache_resource(show_spinner=False)
 def get_agent(model_name: str):
@@ -137,6 +135,7 @@ def run_turn(prompt: str, model_name: str) -> None:
 
 
 def main() -> None:
+    st.set_page_config(page_title="Simple ReAct Assistant", page_icon="🤖")
     st.title("Simple ReAct Assistant")
     st.markdown(
         "Ask me anything. I answer from my own knowledge when I can, **search the web** "
@@ -176,4 +175,7 @@ def main() -> None:
         run_turn(prompt.strip(), settings.openai_model)
 
 
-main()
+# `streamlit run app.py` executes this file as the `__main__` module on every rerun,
+# so the guard still runs the app; a plain `import app` no longer renders the UI.
+if __name__ == "__main__":
+    main()
