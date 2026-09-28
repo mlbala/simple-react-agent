@@ -1,0 +1,23 @@
+[project]
+name = "simple-react-agent"
+version = "0.1.0"
+description = "A small ReAct chatbot (LangGraph + Streamlit) that chooses between model knowledge, Tavily web search, and a safe calculator."
+requires-python = ">=3.12"
+dependencies = [
+    "langchain>=1.4.2",
+    "langchain-openai>=1.6.6",
+    "langgraph>=1.2.12",
+    "openai>=3.19.2",
+    "python-dotenv>=1.2.3",
+    "streamlit>=1.64.0",
+    "tavily-python>=0.8.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
