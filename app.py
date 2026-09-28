@@ -126,7 +126,10 @@ def run_turn(prompt: str, model_name: str) -> None:
                 logger.info("Turn finished in %.1fs using %d tool call(s)", time.monotonic() - started, used)
                 if not final_answer(new_messages):
                     logger.warning("Model finished the turn without any answer text")
-                label = f"Done · used {used} tool call(s)" if used else "Done · answered directly"
+                if used:
+                    label = f"Done · used {used} tool{'' if used == 1 else 's'}"
+                else:
+                    label = "Done · answered directly"
                 status.update(label=label, state="complete")
 
     st.session_state.messages = [*st.session_state.messages, user_message, *new_messages]
