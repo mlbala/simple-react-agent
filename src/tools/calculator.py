@@ -156,5 +156,5 @@ def calculator(expression: str) -> str:
     except CalculatorError as exc:
         logger.info("Calculator rejected an expression")
         return f"Error: {exc}"
-    logger.info("Calculator evaluated an expression (%d chars)", len(expression))
+    logger.debug("Calculator evaluated an expression (%d chars)", len(expression))
     return f"{expression.strip()} = {result}"

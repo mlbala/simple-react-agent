@@ -60,6 +60,7 @@ def _system_prompt(request: ModelRequest) -> str:
 
 def create_model(model_name: str) -> ChatOpenAI:
     # The Responses API supports tool calling with OpenAI's reasoning models at any effort level.
+    logger.info("Creating OpenAI model %s (Responses API, timeout %ss)", model_name, MODEL_TIMEOUT_SECONDS)
     return ChatOpenAI(
         model=model_name,
         use_responses_api=True,

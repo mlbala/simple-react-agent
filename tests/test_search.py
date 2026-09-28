@@ -96,6 +96,11 @@ def test_formatted_output_is_capped_and_marks_content_untrusted():
     assert "https://example.com/0" in text
 
 
+@pytest.mark.parametrize("response", [{}, {"results": None}, {"results": "oops"}, None])
+def test_malformed_response_is_treated_as_no_results(response):
+    assert search_web("query", client=FakeTavilyClient(response)) == []
+
+
 def test_empty_results_return_clear_message(monkeypatch):
     monkeypatch.setattr(search, "search_web", lambda query: [])
 
@@ -122,6 +127,8 @@ def test_missing_api_key_is_reported_without_calling_tavily(monkeypatch):
         (ForbiddenError("no credits"), "denied"),
         (BadRequestError("bad query"), "invalid"),
         (http_error(404), "HTTP 404"),
+        (requests.JSONDecodeError("Expecting value", "<html>", 0), "unreadable"),
+        (requests.exceptions.ChunkedEncodingError("connection broken"), "incomplete"),
     ],
 )
 def test_permanent_errors_are_not_retried(error, message):

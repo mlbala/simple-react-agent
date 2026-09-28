@@ -80,6 +80,9 @@ def search_web(
             last_error = exc  # 5xx: server-side problem, worth retrying.
         except _TRANSIENT_ERRORS as exc:
             last_error = exc
+        except requests.RequestException as exc:
+            # Any other `requests` failure (e.g. an unreadable JSON body) is not worth retrying.
+            raise SearchError("Tavily returned an unreadable or incomplete response.") from exc
         else:
             results = _parse_results(response)
             logger.info(
@@ -125,7 +128,10 @@ def format_results(query: str, results: list[dict[str, str]]) -> str:
 
 
 def _parse_results(response: Any) -> list[dict[str, str]]:
-    raw_results = response.get("results", []) if isinstance(response, dict) else []
+    raw_results = response.get("results") if isinstance(response, dict) else None
+    if not isinstance(raw_results, list):
+        logger.warning("Tavily response had no results list; treating it as no results")
+        return []
     results = []
     for item in raw_results:
         if not isinstance(item, dict):

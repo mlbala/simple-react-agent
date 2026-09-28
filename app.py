@@ -9,6 +9,7 @@ every turn. A turn is committed only once it finishes, so reruns never duplicate
 """
 
 import logging
+import time
 
 import streamlit as st
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage
@@ -103,6 +104,7 @@ def run_turn(prompt: str, model_name: str) -> None:
 
     with st.chat_message("assistant"):
         new_messages: list[AnyMessage] = []
+        started = time.monotonic()
         with st.status("Thinking…") as status:
             try:
                 history = [*st.session_state.messages, user_message]
@@ -115,13 +117,19 @@ def run_turn(prompt: str, model_name: str) -> None:
                             status.markdown(f"{icon} {item.label}: `{describe_call(item)}`")
             # UI boundary: log the full error server-side, show only a safe summary.
             except Exception as exc:
-                logger.exception("Agent run failed")
+                logger.exception("Agent run failed with %s", type(exc).__name__)
                 status.update(label="Something went wrong", state="error")
                 # Drop the partial turn (it may hold unanswered tool calls) and record the error.
                 new_messages = [AIMessage(f"⚠️ {describe_error(exc)}")]
             else:
                 used = len(tool_activity(new_messages))
-                label = f"Done · used {used} tool call(s)" if used else "Done · answered directly"
+                logger.info("Turn finished in %.1fs using %d tool call(s)", time.monotonic() - started, used)
+                if not final_answer(new_messages):
+                    logger.warning("Model finished the turn without any answer text")
+                if used:
+                    label = f"Done · used {used} tool{'' if used == 1 else 's'}"
+                else:
+                    label = "Done · answered directly"
                 status.update(label=label, state="complete")
 
     st.session_state.messages = [*st.session_state.messages, user_message, *new_messages]
