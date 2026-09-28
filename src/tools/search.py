@@ -80,6 +80,9 @@ def search_web(
             last_error = exc  # 5xx: server-side problem, worth retrying.
         except _TRANSIENT_ERRORS as exc:
             last_error = exc
+        except requests.RequestException as exc:
+            # Any other `requests` failure (e.g. an unreadable JSON body) is not worth retrying.
+            raise SearchError("Tavily returned an unreadable or incomplete response.") from exc
         else:
             results = _parse_results(response)
             logger.info(

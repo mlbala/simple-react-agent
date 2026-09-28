@@ -122,6 +122,8 @@ def test_missing_api_key_is_reported_without_calling_tavily(monkeypatch):
         (ForbiddenError("no credits"), "denied"),
         (BadRequestError("bad query"), "invalid"),
         (http_error(404), "HTTP 404"),
+        (requests.JSONDecodeError("Expecting value", "<html>", 0), "unreadable"),
+        (requests.exceptions.ChunkedEncodingError("connection broken"), "incomplete"),
     ],
 )
 def test_permanent_errors_are_not_retried(error, message):
