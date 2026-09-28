@@ -128,7 +128,10 @@ def format_results(query: str, results: list[dict[str, str]]) -> str:
 
 
 def _parse_results(response: Any) -> list[dict[str, str]]:
-    raw_results = response.get("results", []) if isinstance(response, dict) else []
+    raw_results = response.get("results") if isinstance(response, dict) else None
+    if not isinstance(raw_results, list):
+        logger.warning("Tavily response had no results list; treating it as no results")
+        return []
     results = []
     for item in raw_results:
         if not isinstance(item, dict):
