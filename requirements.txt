@@ -166,6 +166,7 @@ requests==2.34.2
     # via
     #   langsmith
     #   requests-toolbelt
+    #   simple-react-agent
     #   streamlit
     #   tavily-python
     #   tiktoken

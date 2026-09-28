@@ -9,6 +9,7 @@ dependencies = [
     "langgraph>=1.2.12",
     "openai>=3.19.2",
     "python-dotenv>=1.2.3",
+    "requests>=2.34.2",
     "streamlit>=1.64.0",
     "tavily-python>=0.8.4",
 ]
