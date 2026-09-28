@@ -117,7 +117,7 @@ def run_turn(prompt: str, model_name: str) -> None:
                             status.markdown(f"{icon} {item.label}: `{describe_call(item)}`")
             # UI boundary: log the full error server-side, show only a safe summary.
             except Exception as exc:
-                logger.exception("Agent run failed")
+                logger.exception("Agent run failed with %s", type(exc).__name__)
                 status.update(label="Something went wrong", state="error")
                 # Drop the partial turn (it may hold unanswered tool calls) and record the error.
                 new_messages = [AIMessage(f"⚠️ {describe_error(exc)}")]
