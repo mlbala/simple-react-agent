@@ -1,3 +1,19 @@
+# --- Project-specific -------------------------------------------------------
+# uv: commit `pyproject.toml`, `uv.lock` and `.python-version`.
+# The uv-managed `.venv` and `.env` are ignored in "Environments" below.
+
+# Secrets: ignore every env variant (.env.local, .env.prod, ...) but keep the template.
+.env.*
+!.env.example
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Log directories (*.log files are ignored further below)
+logs/
+# ---------------------------------------------------------------------------
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
