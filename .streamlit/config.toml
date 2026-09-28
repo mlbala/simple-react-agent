@@ -1,0 +1,8 @@
+# Streamlit settings for this app. Secrets belong in `.env`, never in this file.
+
+[client]
+# Show only generic error messages in the browser; details go to the terminal log.
+showErrorDetails = "none"
+
+[browser]
+gatherUsageStats = false
