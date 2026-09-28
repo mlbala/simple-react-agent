@@ -180,6 +180,20 @@ uv run streamlit run app.py
 
 (or `streamlit run app.py` with the environment activated). Open <http://localhost:8501>.
 
+To run the tests first and start the app only if they pass:
+
+```bash
+# macOS / Linux / Windows cmd
+uv run pytest && uv run streamlit run app.py
+```
+
+```powershell
+# Windows PowerShell 5.1 (no && support)
+uv run pytest; if ($?) { uv run streamlit run app.py }
+```
+
+The tests don't need your `.env` or API keys (see [Run the tests](#run-the-tests)).
+
 Use the **example questions** in the sidebar or type your own. **Clear chat** resets both the visible conversation and the context sent to the agent.
 
 ## Example prompts
@@ -200,7 +214,7 @@ Use the **example questions** in the sidebar or type your own. **Clear chat** re
 uv run pytest
 ```
 
-The suite makes **no network or paid API calls**. OpenAI is replaced by a scripted fake chat model and Tavily by a fake client. It covers:
+The suite makes **no network or paid API calls** and ignores your `.env`. OpenAI is replaced by a scripted fake chat model and Tavily by a fake client. Useful options: `-v` lists each test, `-x` stops at the first failure, and `uv run pytest tests/test_calculator.py` runs a single file. It covers:
 
 - **Calculator**: arithmetic, precedence and parentheses, decimals, percentages, division by zero, invalid input, rejection of unsafe code (function calls, attributes, names, imports), and rejection of expensive expressions (huge exponents, results, length, nesting).
 - **Search**: result formatting and size caps, empty results, missing key, auth and rate-limit errors (not retried), transient errors (retried with backoff, bounded).
