@@ -208,6 +208,17 @@ Use the **example questions** in the sidebar or type your own. **Clear chat** re
 | How much is a 15% tip on $86.40, split between 3 people? | Uses the calculator |
 | Convert it. | Asks a clarifying question |
 
+### Triggering and confirming web search
+
+The model searches when the answer depends on current information, for example "What is the current price of Bitcoin?" or "What is the latest stable Python release?". Questions it can answer from its own knowledge (such as "What is a Python decorator?") don't search, by design. To make sure it searches, ask directly: "Search the web for … and cite the sources."
+
+You can tell a search happened when:
+
+- the status line reads **Searching the web…** while the answer is being prepared,
+- **🔎 Searching the web** appears under the answer, and **Tool details** shows the query and result URLs,
+- the answer includes clickable source links, and
+- the terminal log shows `Tavily search returned N result(s) in …s`.
+
 ## Run the tests
 
 ```bash
