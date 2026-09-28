@@ -9,6 +9,7 @@ every turn. A turn is committed only once it finishes, so reruns never duplicate
 """
 
 import logging
+import time
 
 import streamlit as st
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage
@@ -103,6 +104,7 @@ def run_turn(prompt: str, model_name: str) -> None:
 
     with st.chat_message("assistant"):
         new_messages: list[AnyMessage] = []
+        started = time.monotonic()
         with st.status("Thinking…") as status:
             try:
                 history = [*st.session_state.messages, user_message]
@@ -121,6 +123,7 @@ def run_turn(prompt: str, model_name: str) -> None:
                 new_messages = [AIMessage(f"⚠️ {describe_error(exc)}")]
             else:
                 used = len(tool_activity(new_messages))
+                logger.info("Turn finished in %.1fs using %d tool call(s)", time.monotonic() - started, used)
                 label = f"Done · used {used} tool call(s)" if used else "Done · answered directly"
                 status.update(label=label, state="complete")
 
